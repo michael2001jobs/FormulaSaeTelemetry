@@ -1,5 +1,6 @@
 package br.com.michael_fausto.formulaSAE.entity.car;
 
+import br.com.michael_fausto.formulaSAE.entity.TelemetryDataEntity;
 import br.com.michael_fausto.formulaSAE.model.car.ComponentStatus;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -11,7 +12,7 @@ import java.time.LocalDateTime;
 @Setter
 @Entity
 @Table(name = "cooling_telemetry")
-public class CoolingTelemetryEntity {
+public class CoolingTelemetryEntity extends TelemetryDataEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

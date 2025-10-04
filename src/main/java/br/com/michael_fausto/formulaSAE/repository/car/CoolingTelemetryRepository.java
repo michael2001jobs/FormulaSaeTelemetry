@@ -6,4 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface CoolingTelemetryRepository extends JpaRepository<CoolingTelemetryEntity, Long> {
 
     CoolingTelemetryEntity findTopByOrderByIdDesc();
+
 }

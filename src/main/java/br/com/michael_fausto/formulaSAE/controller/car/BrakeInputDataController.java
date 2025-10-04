@@ -18,7 +18,7 @@ public class BrakeInputDataController {
         this.messagingTemplate = messagingTemplate;
     }
 
-    //@Scheduled(fixedRate = 200000 )
+    //@Scheduled(fixedRate = 500 )
     public void sendBrakeTelemetry() {
         BrakeTelemetryEntity status = serviceBrake.setBrakeTelemetryEntity(
                 serviceBrake.brakeSensorParse(BrakeMock.brakeMockSimulatadArduino())

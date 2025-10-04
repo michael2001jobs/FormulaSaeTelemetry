@@ -54,7 +54,6 @@ public class BrakeTelemetryService {
             if (pressure < 70) return ComponentStatus.HIGH;
             return ComponentStatus.WARNING;
         };
-
         return brakeFluidPressureLambda.apply(brakeData.fluidPressure());
     }
 

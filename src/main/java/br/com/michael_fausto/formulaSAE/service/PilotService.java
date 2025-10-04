@@ -1,25 +1,31 @@
 package br.com.michael_fausto.formulaSAE.service;
 
-import br.com.michael_fausto.formulaSAE.mapper.PilotMapper;
 import br.com.michael_fausto.formulaSAE.entity.PilotEntity;
+import br.com.michael_fausto.formulaSAE.entity.TelemetryDataEntity;
+import br.com.michael_fausto.formulaSAE.entity.TelemetryEntity;
 import br.com.michael_fausto.formulaSAE.model.Pilot;
 import br.com.michael_fausto.formulaSAE.repository.PilotRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+
 @Service
 public class PilotService {
 
     private final PilotRepository repository;
-    private final PilotMapper mapper;
 
-    public PilotService(PilotRepository repository, PilotMapper mapper) {
+    public PilotService(PilotRepository repository) {
         this.repository = repository;
-        this.mapper = mapper;
     }
 
-    public PilotEntity createPilot(Pilot pilot) {
-        return repository.save(mapper.convertToEntity(pilot));
+    public PilotEntity createAndSavePilot(Pilot pilot) {
+        return new PilotEntity(
+                null,
+                pilot.getName(),
+                pilot.getEmail(),
+                new ArrayList<TelemetryEntity>()
+        );
     }
 
     public PilotEntity getPilot(Long id) {
@@ -28,11 +34,7 @@ public class PilotService {
     }
 
     public void deletePilot(PilotEntity pilot) {
-        try {
-            repository.deleteById(pilot.getId());
-        } catch (EntityNotFoundException e) {
-            throw new EntityNotFoundException("Pilot not found");
-        }
+        repository.deleteById(pilot.getId());
     }
 
     public PilotEntity updatePilot(Long id, Pilot pilot) {

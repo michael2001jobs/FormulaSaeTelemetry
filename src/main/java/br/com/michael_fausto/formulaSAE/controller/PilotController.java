@@ -33,7 +33,7 @@ public class PilotController {
 
     @PostMapping("/create")
     public ResponseEntity<Pilot> createPilot(@Valid @RequestBody Pilot pilot) {
-        service.createPilot(pilot);
+        service.createAndSavePilot(pilot);
         return ResponseEntity.ok(pilot);
     }
 
@@ -46,7 +46,7 @@ public class PilotController {
     @PostMapping("/so1") //Gambiarra
     public List<Pilot> teste(@RequestBody List<Pilot> list) {
         for (int i = 0; i < list.size(); i++) {
-            service.createPilot(list.get(i));
+            service.createAndSavePilot(list.get(i));
         }
         return list;
     }

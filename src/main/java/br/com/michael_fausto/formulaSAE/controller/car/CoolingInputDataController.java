@@ -4,9 +4,10 @@ import br.com.michael_fausto.formulaSAE.entity.car.CoolingTelemetryEntity;
 import br.com.michael_fausto.formulaSAE.model.mocks.CoolingMock;
 import br.com.michael_fausto.formulaSAE.service.car.CoolingService;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 public class CoolingInputDataController {
@@ -28,3 +29,4 @@ public class CoolingInputDataController {
         messagingTemplate.convertAndSend("/topic/cooling", status);
     }
 }
+
