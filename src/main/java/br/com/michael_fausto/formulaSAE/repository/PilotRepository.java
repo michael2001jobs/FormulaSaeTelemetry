@@ -8,4 +8,5 @@ public interface PilotRepository extends JpaRepository<PilotEntity, Long> {
 
     void deleteByEmail(String email);
 
+    Long id(Long id);
 }

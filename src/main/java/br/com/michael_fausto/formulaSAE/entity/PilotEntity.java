@@ -1,16 +1,24 @@
 package br.com.michael_fausto.formulaSAE.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.List;
 
-
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "pilot")
 public class PilotEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
@@ -19,54 +27,6 @@ public class PilotEntity {
     @Column(nullable = false)
     private String email;
 
-    @OneToMany(mappedBy = "pilot", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "pilot", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<TelemetryEntity> telemetryList;
-
-    public PilotEntity(Long id, String name, String email, List<TelemetryEntity> telemetryList) {
-        this.id = id;
-        this.name = name;
-        this.email = email;
-        this.telemetryList = telemetryList;
-    }
-
-    public PilotEntity() {
-    }
-
-    public PilotEntity(Long id, String name, String email) {
-        this.id = id;
-        this.name = name;
-        this.email = email;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public List<TelemetryEntity> getTelemetryList() {
-        return telemetryList;
-    }
-
-    public void setTelemetryList(List<TelemetryEntity> telemetryList) {
-        this.telemetryList = telemetryList;
-    }
 }

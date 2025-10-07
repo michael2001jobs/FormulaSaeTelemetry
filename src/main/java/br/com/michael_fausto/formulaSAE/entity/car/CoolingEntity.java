@@ -1,21 +1,27 @@
 package br.com.michael_fausto.formulaSAE.entity.car;
 
-import br.com.michael_fausto.formulaSAE.entity.TelemetryDataEntity;
 import br.com.michael_fausto.formulaSAE.model.car.ComponentStatus;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "cooling_telemetry")
-public class CoolingTelemetryEntity extends TelemetryDataEntity {
+public class CoolingEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "cooling_temperature", nullable = true)
@@ -33,22 +39,10 @@ public class CoolingTelemetryEntity extends TelemetryDataEntity {
     private ComponentStatus reservoirVolumeStatus;
 
     @Column(name = "timestamp", nullable = false)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime timestamp;
 
     @Column(name = "fan",nullable = false)
     private Boolean fan;
-
-    public CoolingTelemetryEntity() {
-    }
-
-    public CoolingTelemetryEntity(Long id, Integer coolingSystemTemperature, ComponentStatus coolingSystemStatus, Double reservoirVolume, ComponentStatus reservoirVolumeStatus, LocalDateTime timestamp, Boolean fan) {
-        this.id = id;
-        this.coolingSystemTemperature = coolingSystemTemperature;
-        this.coolingSystemStatus = coolingSystemStatus;
-        this.reservoirVolume = reservoirVolume;
-        this.reservoirVolumeStatus = reservoirVolumeStatus;
-        this.timestamp = timestamp;
-        this.fan = fan;
-    }
 
 }

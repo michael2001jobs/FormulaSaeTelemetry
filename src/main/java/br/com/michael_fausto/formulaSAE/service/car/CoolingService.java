@@ -1,35 +1,48 @@
 package br.com.michael_fausto.formulaSAE.service.car;
 
-import br.com.michael_fausto.formulaSAE.entity.car.CoolingTelemetryEntity;
+import br.com.michael_fausto.formulaSAE.entity.car.CoolingEntity;
 import br.com.michael_fausto.formulaSAE.exception.SensorFailureException;
+import br.com.michael_fausto.formulaSAE.mapper.CoolingMapper;
 import br.com.michael_fausto.formulaSAE.model.car.ComponentStatus;
 import br.com.michael_fausto.formulaSAE.model.car.cooling.CoolingData;
 import br.com.michael_fausto.formulaSAE.model.car.cooling.CoolingSensorData;
+import br.com.michael_fausto.formulaSAE.model.dto.CoolingDTO;
+import br.com.michael_fausto.formulaSAE.mqtt.car.cooling.CoolingMqttSubscriber;
 import br.com.michael_fausto.formulaSAE.repository.car.CoolingTelemetryRepository;
 import br.com.michael_fausto.formulaSAE.util.ConvertUtills;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Random;
 import java.util.function.Function;
 
+@AllArgsConstructor
 @Controller
 public class CoolingService {
 
     private final CoolingTelemetryRepository repository;
+    private final CoolingMqttSubscriber subscriber;
+    private final CoolingMapper mapper;
 
-    public CoolingService(CoolingTelemetryRepository repository) {
-        this.repository = repository;
+    public CoolingEntity buildCoolingEntity(CoolingData coolingData) {
+        return repository.save(new CoolingEntity(
+                null,
+                setCoolingTemperature(coolingData),
+                setCoolingTemperatureStatus(coolingData),
+                setCoolingFluidVolume(coolingData),
+                setCoolingReservoirVolumeStatus(coolingData),
+                LocalDateTime.now(),
+                setFan(coolingData)));
     }
 
-    public CoolingData teste() {
-        Random random = new Random();
-        Integer coolingSystemTemperature = 20 + random.nextInt(100);
-        Double reservoirVolume = 0.5 + random.nextDouble(17);
-        Boolean fan = random.nextBoolean();
+    public CoolingDTO getLatestTelemetry() {
+        return mapper.toDto(repository.findTopByOrderByIdDesc());
+    }
 
-        return new CoolingData(coolingSystemTemperature, reservoirVolume, fan);
+    @Transactional
+    public CoolingEntity mqttCooling() {
+        return buildCoolingEntity(coolingSensorParse(subscriber.getLast()));
     }
 
     public CoolingData coolingSensorParse(CoolingSensorData sensorData) {
@@ -80,24 +93,5 @@ public class CoolingService {
 
     public Boolean setFan(CoolingData coolingData) {
         return coolingData.fan();
-    }
-
-    public CoolingTelemetryEntity setCoolingEntity(CoolingData coolingData) {
-        return new CoolingTelemetryEntity(
-                null,
-                setCoolingTemperature(coolingData),
-                setCoolingTemperatureStatus(coolingData),
-                setCoolingFluidVolume(coolingData),
-                setCoolingReservoirVolumeStatus(coolingData),
-                LocalDateTime.now(),
-                setFan(coolingData));
-    }
-
-    public void saveCoolingTelemetryEntity(CoolingTelemetryEntity data) {
-        repository.save(data);
-    }
-
-    public CoolingTelemetryEntity getLatestTelemetry() {
-        return repository.findTopByOrderByIdDesc();
     }
 }

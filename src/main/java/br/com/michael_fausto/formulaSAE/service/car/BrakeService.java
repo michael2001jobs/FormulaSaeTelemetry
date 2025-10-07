@@ -1,24 +1,48 @@
 package br.com.michael_fausto.formulaSAE.service.car;
 
 import br.com.michael_fausto.formulaSAE.exception.SensorFailureException;
+import br.com.michael_fausto.formulaSAE.mapper.BrakeMapper;
 import br.com.michael_fausto.formulaSAE.model.car.brakes.BrakeData;
 import br.com.michael_fausto.formulaSAE.model.car.brakes.BrakeSensorData;
-import br.com.michael_fausto.formulaSAE.entity.car.BrakeTelemetryEntity;
+import br.com.michael_fausto.formulaSAE.entity.car.BrakeEntity;
 import br.com.michael_fausto.formulaSAE.model.car.ComponentStatus;
+import br.com.michael_fausto.formulaSAE.model.dto.BrakeDTO;
+import br.com.michael_fausto.formulaSAE.mqtt.car.brake.BrakeMqttSubscriber;
 import br.com.michael_fausto.formulaSAE.repository.car.BrakeTelemetryRepository;
 import br.com.michael_fausto.formulaSAE.util.ConvertUtills;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.function.Function;
 
+@AllArgsConstructor
 @Service
-public class BrakeTelemetryService {
+public class BrakeService {
 
     private final BrakeTelemetryRepository repository;
+    private final BrakeMqttSubscriber subscriber;
+    private final BrakeMapper mapper;
 
-    public BrakeTelemetryService(BrakeTelemetryRepository repository) {
-        this.repository = repository;
+    public BrakeEntity buildBrakeEntity(BrakeData brakeData) {
+        return repository.save(new BrakeEntity(
+                null,
+                setDiscTemperature(brakeData),
+                setDiscTemperatureStatus(brakeData),
+                setFluidPressure(brakeData),
+                setFluidPressureStatus(brakeData),
+                LocalDateTime.now(),
+                setHandBrake(brakeData)));
+    }
+
+    public BrakeDTO getLatestTelemetry() {
+        return mapper.toDto(repository.findTopByOrderByIdDesc());
+    }
+
+    @Transactional
+    public BrakeEntity mqttBrake() {
+        return buildBrakeEntity(brakeSensorParse(subscriber.getLast()));
     }
 
     public BrakeData brakeSensorParse(BrakeSensorData sensorData) {
@@ -67,25 +91,5 @@ public class BrakeTelemetryService {
 
     public Boolean setHandBrake(BrakeData brakeData) {
         return brakeData.handBrake();
-    }
-
-    public BrakeTelemetryEntity setBrakeTelemetryEntity(BrakeData brakeData) {
-        return new BrakeTelemetryEntity(
-                null,
-                setDiscTemperature(brakeData),
-                setDiscTemperatureStatus(brakeData),
-                setFluidPressure(brakeData),
-                setFluidPressureStatus(brakeData),
-                LocalDateTime.now(),
-                setHandBrake(brakeData)
-        );
-    }
-
-    public void saveBrakeTelemetry(BrakeTelemetryEntity data) {
-        repository.save(data);
-    }
-
-    public BrakeTelemetryEntity getLatestTelemetry() {
-        return repository.findTopByOrderByIdDesc();
     }
 }

@@ -1,8 +1,15 @@
 package br.com.michael_fausto.formulaSAE.entity;
 
+import br.com.michael_fausto.formulaSAE.entity.car.BrakeEntity;
+import br.com.michael_fausto.formulaSAE.entity.car.CoolingEntity;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -10,6 +17,8 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
 public class TelemetryEntity {
 
     @Id
@@ -17,21 +26,17 @@ public class TelemetryEntity {
     private Long id;
 
     @ManyToOne
+    @JsonIgnore
     private PilotEntity pilot;
 
-    @OneToMany(mappedBy = "telemetry", cascade = CascadeType.ALL)
-    private List<TelemetryDataEntity> dataEntries;
-
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime timestamp;
 
-    public TelemetryEntity(Long id, PilotEntity pilot, List<TelemetryDataEntity> dataEntries, LocalDateTime timestamp) {
-        this.id = id;
-        this.pilot = pilot;
-        this.dataEntries = dataEntries;
-        this.timestamp = timestamp;
-    }
+    @OneToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "telemetry_id")
+    private List<BrakeEntity> brakeTelemetry;
 
-    public TelemetryEntity() {
-        
-    }
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "telemetry_id")
+    private List<CoolingEntity> coolingTelemetry;
 }

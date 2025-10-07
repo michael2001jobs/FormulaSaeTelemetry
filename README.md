@@ -1,17 +1,17 @@
 # FormulaSAE Telemetry Project 
 
-This repository is the early development stage of a **Formula SAE telemetry system**, built with **Spring Boot** and **modular architecture** to manage different subsystems of the car.
+This repository is the early development stage of a **Formula SAE telemetryDTO system**, built with **Spring Boot** and **modular architecture** to manage different subsystems of the car.
 
 ## Current Status
 - **Experimental phase** – everything here is still under testing.  
 - **Arduino data is mocked** – no real sensors connected yet.  
-- **Car rules not finalized** – telemetry logic and data validation rules are still being defined.  
+- **Car rules not finalized** – telemetryDTO logic and data validation rules are still being defined.  
 
 ## Project Structure
 - **Backend (Spring Boot)**  
   - `entity/` → Database entities (e.g. `PilotEntity`, `Telemetry`, `CoolingTelemetryEntity`, `BrakeTelemetryEntity`).  
   - `repository/` → JPA repositories for database operations.  
-  - `service/` → Business logic and telemetry services (e.g. Pilot, Cooling, Brake).  
+  - `service/` → Business logic and telemetryDTO services (e.g. Pilot, Cooling, Brake).  
   - `model/` → Domain models (e.g. `Pilot`, `ComponentStatus`).  
 
 - **Frontend / Integration**  
@@ -88,7 +88,7 @@ node testWebSocket.js
 ```
 
 ## 🚀 Next Steps
-- Define car telemetry rules (what data to capture, thresholds, alerts).  
+- Define car telemetryDTO rules (what data to capture, thresholds, alerts).  
 - Connect Arduino and replace mocks with real sensor data.  
 - Expand services for all subsystems (engine, brakes, cooling, suspension, electrical).  
 - Build a dashboard for real-time visualization in web.  
