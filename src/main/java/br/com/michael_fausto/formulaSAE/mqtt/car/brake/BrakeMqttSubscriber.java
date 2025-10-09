@@ -56,6 +56,9 @@ public class BrakeMqttSubscriber {
     }
 
     public BrakeSensorData getLast() {
-        return new BrakeSensorData(brakeSensorData.discBreakTemperature(), brakeSensorData.brakeFluidPressure(), brakeSensorData.handBrake());
+        return new BrakeSensorData(
+                brakeSensorData.wheelPosition(),
+                brakeSensorData.discBreakTemperature(),
+                brakeSensorData.brakeFluidPressure());
     }
 }

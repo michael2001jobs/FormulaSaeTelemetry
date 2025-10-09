@@ -1,28 +1,24 @@
-const SockJS = require('sockjs-client');
-const { Client } = require('@stomp/stompjs');
+const WebSocket = require('ws');
 
-global.WebSocket = require('ws');
+// Conecta no seu servidor WebSocket Spring (porta 8081)
+const socket = new WebSocket('ws://localhost:8081');
 
-const socket = new SockJS('http://192.168.3.159:8080/ws-status'); // use seu IP local
-const stompClient = new Client({
-  webSocketFactory: () => socket,
-  reconnectDelay: 5000,
-  debug: (str) => console.log(str),
+// Evento quando a conexão é aberta
+socket.on('open', () => {
+    console.log('Conectado ao WebSocket! Aguardando mensagens...');
 });
 
-stompClient.onConnect = () => {
-  console.log("Conectado ao WebSocket");
+// Evento para receber mensagens do servidor
+socket.on('message', (data) => {
+    console.log('Mensagem recebida:', data.toString());
+});
 
-  stompClient.subscribe('/topic/brake', (message) => {
-    const data = JSON.parse(message.body);
-    console.log("Data received:");
-    console.log(data);
-  });
-};
+// Evento de erro
+socket.on('error', (err) => {
+    console.error('Erro na conexão WebSocket:', err);
+});
 
-stompClient.onStompError = (frame) => {
-  console.error("Erro STOMP:", frame.headers['message']);
-  console.error("Detalhes:", frame.body);
-};
-
-stompClient.activate();
+// Evento de fechamento
+socket.on('close', () => {
+    console.log('Conexão WebSocket fechada pelo servidor.');
+});

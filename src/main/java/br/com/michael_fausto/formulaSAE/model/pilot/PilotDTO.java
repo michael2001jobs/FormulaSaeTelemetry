@@ -1,5 +1,7 @@
-package br.com.michael_fausto.formulaSAE.model.dto;
+package br.com.michael_fausto.formulaSAE.model.pilot;
 
+import br.com.michael_fausto.formulaSAE.model.telemetry.TelemetrySummaryDTO;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -15,6 +17,9 @@ import java.util.List;
 @Getter
 @Setter
 public class PilotDTO {
+
+    @JsonIgnore
+    Long id;
 
     @NotBlank(message = "Name is required")
     private String name;

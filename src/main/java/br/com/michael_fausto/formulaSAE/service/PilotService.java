@@ -1,17 +1,16 @@
 package br.com.michael_fausto.formulaSAE.service;
 
 import br.com.michael_fausto.formulaSAE.entity.PilotEntity;
-import br.com.michael_fausto.formulaSAE.entity.TelemetryEntity;
 import br.com.michael_fausto.formulaSAE.mapper.PilotMapper;
-import br.com.michael_fausto.formulaSAE.model.dto.PilotDTO;
+import br.com.michael_fausto.formulaSAE.model.pilot.PilotDTO;
 import br.com.michael_fausto.formulaSAE.repository.PilotRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
 
 @AllArgsConstructor
 @Service
@@ -19,54 +18,55 @@ public class PilotService {
 
     private final PilotRepository repository;
     private final PilotMapper mapper;
+    private final Logger logger = LoggerFactory.getLogger(PilotService.class);
 
-    public PilotEntity buildPilot(PilotDTO pilotDTO) {
-        return new PilotEntity(
-                null,
-                pilotDTO.getName(),
-                pilotDTO.getEmail(),
-                new ArrayList<TelemetryEntity>()
-        );
+    public PilotDTO convertDto(PilotEntity entity) {
+        PilotDTO dto = mapper.toDto(entity);
+        logger.info("Pilot convert in DTO: {}", dto);
+        return dto;
     }
 
-    public PilotDTO entityToDTO(PilotEntity pilot) {
-        return mapper.toDto(pilot);
+    public void savePilot(PilotEntity entity) {
+        repository.save(entity);
+        logger.info("Pilot saved: {}", entity);
     }
 
-    public void savePilot(PilotEntity pilot) {
-        repository.save(pilot);
-    }
-
-
-    public PilotEntity getPilotEntity(Long pilotId) {
-        return repository.findById(pilotId)
-                .orElseThrow(() -> new EntityNotFoundException("Pilot not found"));
+    public PilotEntity convertEntity(PilotDTO dto) {
+        PilotEntity entity = mapper.toEntity(dto);
+        logger.info("Pilot convert in Entity : {}", entity);
+        return entity;
     }
 
     @Transactional
-    public PilotDTO getPilotDTO(Long pilotId) {
-        PilotEntity pilotEntity = repository.findById(pilotId).orElseThrow();
-        return mapper.toDto(pilotEntity);
+    public PilotEntity findById(Long id) {
+        PilotEntity entity = repository.findById(id).orElseThrow(()
+                -> new EntityNotFoundException("Cooling Setup with" + id + " not found"));
+        logger.debug("Pilot find by id : {}", entity);
+        return entity;
     }
 
     @Transactional
-    public PilotDTO deletePilot(Long pilotId) {
+    public PilotDTO updatePilot(PilotDTO dto, Long id) {
+        PilotEntity entity = findById(id);
+
+        entity.setEmail(dto.getEmail());
+        entity.setName(dto.getName());
+
+        repository.save(entity);
+        logger.info("Pilot update: {}", entity);
+
+        return mapper.toDto(entity);
+    }
+
+
+    @Transactional
+    public void deletePilot(Long id) {
         try {
-            PilotEntity pilot = getPilotEntity(pilotId);
-            PilotDTO pilotDTO =entityToDTO(pilot);
-            repository.deleteById(pilot.getId());
-            return (pilotDTO);
+            repository.deleteById(id);
+            logger.info("Pilot as been deleted");
         } catch (EmptyResultDataAccessException e) {
-            throw new EntityNotFoundException();
+            throw new EntityNotFoundException("Pilot with" + id + " not found");
         }
     }
-
-    @Transactional
-    public PilotDTO updatePilot(Long id, PilotDTO pilotDTO) {
-        PilotEntity entity = getPilotEntity(id);
-        entity.setEmail(pilotDTO.getEmail());
-        entity.setName(pilotDTO.getName());
-        repository.save(entity);
-        return entityToDTO(entity);
-    }
 }
+    

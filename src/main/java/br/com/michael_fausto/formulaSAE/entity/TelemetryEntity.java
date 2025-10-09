@@ -1,7 +1,7 @@
 package br.com.michael_fausto.formulaSAE.entity;
 
-import br.com.michael_fausto.formulaSAE.entity.car.BrakeEntity;
-import br.com.michael_fausto.formulaSAE.entity.car.CoolingEntity;
+import br.com.michael_fausto.formulaSAE.entity.car.brake.BrakeEntity;
+import br.com.michael_fausto.formulaSAE.entity.car.cooling.CoolingEntity;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -9,7 +9,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 import java.util.List;

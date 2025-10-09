@@ -14,7 +14,7 @@ public class MqttSchedule {
     private final BrakeMqttPublisher publisherBrake;
     private final CoolingMqttPublisher publisherCooling;
 
-    @Scheduled(fixedRate = 1000)
+    //@Scheduled(fixedRate = 1000)
     public void autoPublish() {
         publisherCooling.publishMockData();
         publisherBrake.publishMockData();

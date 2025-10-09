@@ -26,7 +26,7 @@ public class BrakeMqttPublisher {
 
     public void publishMockData() {
         try {
-            BrakeSensorData brakeSensorData = BrakeMock.brakeMockSimulatadArduino();
+            BrakeSensorData brakeSensorData = BrakeMock.brakeMockSimulationArduino();
             String payload = objectMapper.writeValueAsString(brakeSensorData);
 
             MqttMessage message = new MqttMessage(payload.getBytes(StandardCharsets.UTF_8));

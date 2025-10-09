@@ -1,14 +1,12 @@
-package br.com.michael_fausto.formulaSAE.entity.car;
+package br.com.michael_fausto.formulaSAE.entity.car.brake;
 
 import br.com.michael_fausto.formulaSAE.model.car.ComponentStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 
@@ -23,6 +21,9 @@ public class BrakeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
+
+    @Column(name = "brake_wheel_position", nullable = false)
+    String wheelPosition;
 
     @Column(name = "disc_temperature", nullable = true)
     private Integer discTemperature;
@@ -41,8 +42,5 @@ public class BrakeEntity {
     @Column(name = "timestamp", nullable = false)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime timestamp;
-
-    @Column(name = "handbrake", nullable = false)
-    private Boolean handBrake;
 
 }

@@ -1,16 +1,20 @@
-package br.com.michael_fausto.formulaSAE.service.car;
+package br.com.michael_fausto.formulaSAE.service.car.cooling;
 
-import br.com.michael_fausto.formulaSAE.entity.car.CoolingEntity;
+import br.com.michael_fausto.formulaSAE.entity.car.cooling.CoolingEntity;
+import br.com.michael_fausto.formulaSAE.entity.car.cooling.CoolingSetupEntity;
 import br.com.michael_fausto.formulaSAE.exception.SensorFailureException;
-import br.com.michael_fausto.formulaSAE.mapper.CoolingMapper;
+import br.com.michael_fausto.formulaSAE.mapper.car.cooling.CoolingMapper;
 import br.com.michael_fausto.formulaSAE.model.car.ComponentStatus;
 import br.com.michael_fausto.formulaSAE.model.car.cooling.CoolingData;
 import br.com.michael_fausto.formulaSAE.model.car.cooling.CoolingSensorData;
-import br.com.michael_fausto.formulaSAE.model.dto.CoolingDTO;
+import br.com.michael_fausto.formulaSAE.model.car.cooling.dto.CoolingDTO;
 import br.com.michael_fausto.formulaSAE.mqtt.car.cooling.CoolingMqttSubscriber;
-import br.com.michael_fausto.formulaSAE.repository.car.CoolingTelemetryRepository;
+import br.com.michael_fausto.formulaSAE.repository.car.cooling.CoolingRepository;
 import br.com.michael_fausto.formulaSAE.util.ConvertUtills;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,19 +25,25 @@ import java.util.function.Function;
 @Controller
 public class CoolingService {
 
-    private final CoolingTelemetryRepository repository;
+    private final CoolingRepository repository;
     private final CoolingMqttSubscriber subscriber;
     private final CoolingMapper mapper;
+    private final CoolingSetupService setupService;
+    private final Logger logger = LoggerFactory.getLogger(CoolingService.class);
 
-    public CoolingEntity buildCoolingEntity(CoolingData coolingData) {
-        return repository.save(new CoolingEntity(
-                null,
-                setCoolingTemperature(coolingData),
-                setCoolingTemperatureStatus(coolingData),
-                setCoolingFluidVolume(coolingData),
-                setCoolingReservoirVolumeStatus(coolingData),
-                LocalDateTime.now(),
-                setFan(coolingData)));
+    public CoolingEntity buildCoolingEntity(CoolingData coolingData, CoolingSetupEntity setup) {
+        if (!setupService.isTableEmpty()) {
+            return new CoolingEntity(
+                    null,
+                    coolingData.coolingSystemTemperature(),
+                    setCoolingTemperatureStatus(coolingData, setup),
+                    coolingData.reservoirVolume(),
+                    setCoolingReservoirVolumeStatus(coolingData, setup),
+                    LocalDateTime.now(),
+                    coolingData.fan());
+        }else {
+            throw new EntityNotFoundException("No CoolingSetup in database");
+        }
     }
 
     public CoolingDTO getLatestTelemetry() {
@@ -41,8 +51,8 @@ public class CoolingService {
     }
 
     @Transactional
-    public CoolingEntity mqttCooling() {
-        return buildCoolingEntity(coolingSensorParse(subscriber.getLast()));
+    public CoolingEntity mqttCooling(CoolingSetupEntity setup) {
+        return buildCoolingEntity(coolingSensorParse(subscriber.getLast()), setup);
     }
 
     public CoolingData coolingSensorParse(CoolingSensorData sensorData) {
@@ -61,37 +71,25 @@ public class CoolingService {
                 safeBooleanConvert.apply(sensorData.fan()));
     }
 
-    public ComponentStatus setCoolingTemperatureStatus(CoolingData coolingData) {
+    public ComponentStatus setCoolingTemperatureStatus(CoolingData coolingData, CoolingSetupEntity setup) {
         Function<Integer, ComponentStatus> coolingLambda = temp -> {
             if (temp == null) return ComponentStatus.FAILURE;
-            if (temp < 105) return ComponentStatus.NORMAL;
-            if (temp < 115) return ComponentStatus.HIGH;
+            if (temp < setup.getNormalCoolingTemperature()) return ComponentStatus.NORMAL;
+            if (temp < setup.getHighCoolingTemperature()) return ComponentStatus.HIGH;
             return ComponentStatus.WARNING;
         };
 
         return coolingLambda.apply(coolingData.coolingSystemTemperature());
     }
 
-    public ComponentStatus setCoolingReservoirVolumeStatus(CoolingData coolingData) {
+    public ComponentStatus setCoolingReservoirVolumeStatus(CoolingData coolingData, CoolingSetupEntity setup) {
         Function<Integer, ComponentStatus> coolingLambda = temp -> {
             if (temp == null) return ComponentStatus.FAILURE;
-            if (temp < 1.2) return ComponentStatus.LOW;
-            if (temp <= 1.6) return ComponentStatus.NORMAL;
+            if (temp < setup.getLowReservoirVolume()) return ComponentStatus.LOW;
+            if (temp <= setup.getNormalReservoirVolume()) return ComponentStatus.NORMAL;
             return ComponentStatus.HIGH;
         };
 
         return coolingLambda.apply(coolingData.coolingSystemTemperature());
-    }
-
-    public Integer setCoolingTemperature(CoolingData coolingData) {
-        return coolingData.coolingSystemTemperature();
-    }
-
-    public Double setCoolingFluidVolume(CoolingData coolingData) {
-        return coolingData.reservoirVolume();
-    }
-
-    public Boolean setFan(CoolingData coolingData) {
-        return coolingData.fan();
     }
 }

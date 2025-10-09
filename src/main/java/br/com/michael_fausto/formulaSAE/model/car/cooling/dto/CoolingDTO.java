@@ -1,4 +1,4 @@
-package br.com.michael_fausto.formulaSAE.model.dto;
+package br.com.michael_fausto.formulaSAE.model.car.cooling.dto;
 
 import br.com.michael_fausto.formulaSAE.model.car.ComponentStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
