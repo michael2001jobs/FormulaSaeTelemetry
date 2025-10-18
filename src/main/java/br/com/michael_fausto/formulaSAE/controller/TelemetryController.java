@@ -15,11 +15,11 @@ public class TelemetryController {
     private final TelemetryService telemetryService;
     private final PilotService pilotService;
 
-    @PostMapping("/telemetry/{pilotId}")
-    public ResponseEntity<?> createTelemetry(@PathVariable Long pilotId) {
-        telemetryService.saveList(telemetryService.buildTelemetryList(pilotService.findById(pilotId)));
-        return ResponseEntity.ok().build();
-    }
+//    @PostMapping("/telemetry/{pilotId}")
+//    public ResponseEntity<?> createTelemetry(@PathVariable Long pilotId) {
+//        telemetryService.saveList(telemetryService.buildTelemetryList(pilotService.findById(pilotId)));
+//        return ResponseEntity.ok().build();
+//    }
 
     @GetMapping("/telemetry/{telemetryId}")
     public ResponseEntity<TelemetryDTO> showTelemetry(@PathVariable Long telemetryId) {

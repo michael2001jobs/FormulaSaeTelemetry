@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @AllArgsConstructor
@@ -19,7 +20,7 @@ public class CoolingSetupService {
     private final CoolingSetupRepository repository;
     private final Logger logger = LoggerFactory.getLogger(CoolingSetupService.class);
 
-    public CoolingSetupEntity convertEntity(CoolingSetupDTO dto) {
+    public CoolingSetupEntity buildCoolingSetup(CoolingSetupDTO dto) {
         CoolingSetupEntity entity = mapper.toEntity(dto);
         logger.info("CoolingSetup convert in entity : {}", entity);
         return entity;
@@ -43,7 +44,8 @@ public class CoolingSetupService {
         return entity;
     }
 
-    public CoolingSetupDTO updateCoolingSetupEntity(CoolingSetupDTO dto, Long id) {
+    @Transactional
+    public void updateCoolingSetupEntity(CoolingSetupDTO dto, Long id) {
         CoolingSetupEntity entity = findById(id);
 
         entity.setProfileName(dto.profileName());
@@ -54,10 +56,9 @@ public class CoolingSetupService {
 
         repository.save(entity);
         logger.info("CoolingSetup update: {}", entity);
-
-        return mapper.toDto(entity);
     }
 
+    @Transactional
     public void deleteCoolingSetup(Long id) {
         try {
             repository.deleteById(id);

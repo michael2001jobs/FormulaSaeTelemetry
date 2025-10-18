@@ -12,5 +12,4 @@ public record BrakeDTO(
         Integer fluidPressure,
         ComponentStatus fluidPressureStatus,
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-        LocalDateTime timestamp) {
-}
+        LocalDateTime timestamp) {}

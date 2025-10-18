@@ -41,7 +41,8 @@ public class CoolingService {
                     setCoolingReservoirVolumeStatus(coolingData, setup),
                     LocalDateTime.now(),
                     coolingData.fan());
-        }else {
+        }
+        else {
             throw new EntityNotFoundException("No CoolingSetup in database");
         }
     }

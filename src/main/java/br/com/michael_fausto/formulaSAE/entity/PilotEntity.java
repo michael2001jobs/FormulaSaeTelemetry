@@ -27,6 +27,6 @@ public class PilotEntity {
     @Column(nullable = false)
     private String email;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "pilot", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "pilot", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<TelemetryEntity> telemetryList;
 }

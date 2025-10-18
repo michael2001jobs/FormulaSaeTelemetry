@@ -8,31 +8,44 @@ import br.com.michael_fausto.formulaSAE.model.car.brakes.BrakeSensorData;
 import br.com.michael_fausto.formulaSAE.entity.car.brake.BrakeEntity;
 import br.com.michael_fausto.formulaSAE.model.car.ComponentStatus;
 import br.com.michael_fausto.formulaSAE.model.car.brakes.dto.BrakeDTO;
-import br.com.michael_fausto.formulaSAE.mqtt.car.brake.BrakeMqttSubscriber;
+import br.com.michael_fausto.formulaSAE.mqtt.car.brake.back.left.BrakeMqttSubscriberBL;
+import br.com.michael_fausto.formulaSAE.mqtt.car.brake.back.right.BrakeMqttSubscriberBR;
+import br.com.michael_fausto.formulaSAE.mqtt.car.brake.front.left.BrakeMqttSubscriberFL;
+import br.com.michael_fausto.formulaSAE.mqtt.car.brake.front.right.BrakeMqttSubscriberFR;
 import br.com.michael_fausto.formulaSAE.repository.car.brake.BrakeRepository;
 import br.com.michael_fausto.formulaSAE.util.ConvertUtills;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Service
+@Transactional
 public class BrakeService {
 
+    private final BrakeMqttSubscriberFL subscriberFL;
+    private final BrakeMqttSubscriberFR subscriberFR;
+    private final BrakeMqttSubscriberBR subscriberBF;
+    private final BrakeMqttSubscriberBL subscriberBL;
+
     private final BrakeRepository repository;
-    private final BrakeMqttSubscriber subscriber;
     private final BrakeMapper mapper;
     private final BrakeSetupService setupService;
     private final Logger logger = LoggerFactory.getLogger(BrakeService.class);
 
     public BrakeEntity buildBrakeEntity(BrakeData brakeData, BrakeSetupEntity setup) {
-        if (!setupService.isTableEmpty())
+        if (!setupService.isTableEmpty()) {
             return new BrakeEntity(
                     null,
                     brakeData.wheelPosition(),
@@ -41,18 +54,24 @@ public class BrakeService {
                     brakeData.fluidPressure(),
                     setFluidPressureStatus(brakeData, setup),
                     LocalDateTime.now());
+        }
         else {
-            throw new EntityNotFoundException("No BrakeSetup in database");
+            throw new EntityNotFoundException("No CoolingSetup in database");
         }
     }
 
-    public BrakeDTO getLatestTelemetry() {
-        return mapper.toDto(repository.findTopByOrderByIdDesc());
-    }
-
     @Transactional
-    public  BrakeEntity mqttBrakeReady(BrakeSetupEntity setup){
-        return buildBrakeEntity(brakeSensorParse(subscriber.getLast()), setup);
+    public void mqttBrakeReady(BrakeSetupEntity setup) {
+        List<BrakeSensorData> subscribers = List.of(
+            subscriberBL.getLast(),
+            subscriberBF.getLast(),
+            subscriberFL.getLast(),
+            subscriberFR.getLast());
+
+        List<BrakeEntity> list = subscribers.stream()
+                .map(sub -> buildBrakeEntity(brakeSensorParse(sub), setup))
+                .toList();
+        repository.saveAll(list);
     }
 
     public BrakeData brakeSensorParse(BrakeSensorData sensorData) {

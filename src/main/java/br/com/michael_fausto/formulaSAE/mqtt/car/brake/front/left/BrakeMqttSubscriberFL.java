@@ -1,9 +1,7 @@
-package br.com.michael_fausto.formulaSAE.mqtt.car.brake;
+package br.com.michael_fausto.formulaSAE.mqtt.car.brake.front.left;
 
 import br.com.michael_fausto.formulaSAE.model.car.brakes.BrakeSensorData;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import jakarta.annotation.PostConstruct;
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
@@ -16,17 +14,17 @@ import java.nio.charset.StandardCharsets;
 
 
 @Component
-public class BrakeMqttSubscriber {
+public class BrakeMqttSubscriberFL {
 
     private BrakeSensorData brakeSensorData;
 
-    private static final Logger log = LoggerFactory.getLogger(BrakeMqttSubscriber.class);
-    private static final String TOPIC_BRAKES = "telemetry/brake";
+    private static final Logger log = LoggerFactory.getLogger(BrakeMqttSubscriberFL.class);
+    private static final String TOPIC_BRAKES = "telemetry/brake/front_left";
 
     private final MqttClient client;
     private final ObjectMapper objectMapper;
 
-    public BrakeMqttSubscriber(MqttClient client, ObjectMapper objectMapper) {
+    public BrakeMqttSubscriberFL(MqttClient client, ObjectMapper objectMapper) {
         this.client = client;
         this.objectMapper = objectMapper;
     }

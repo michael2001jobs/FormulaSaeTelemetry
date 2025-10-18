@@ -3,6 +3,8 @@ package br.com.michael_fausto.formulaSAE.entity.car.brake;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Setter
 @Getter
 @NoArgsConstructor
@@ -13,10 +15,10 @@ public class BrakeSetupEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    private Long id;
 
     @Column(name = "sub_system_name", nullable = false)
-    String profileName;
+    private String profileName;
 
 
 

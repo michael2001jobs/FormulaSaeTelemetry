@@ -16,7 +16,7 @@ public class PilotController {
 
     private final PilotService pilotService;
 
-    @PostMapping("/create")  //ok
+    @PostMapping("/register")  //ok
     public ResponseEntity<PilotDTO> createPilot(@Valid @RequestBody PilotDTO dto) {
         PilotEntity entity = pilotService.convertEntity(dto);
         pilotService.savePilot(entity);

@@ -1,6 +1,7 @@
 package br.com.michael_fausto.formulaSAE.service.car.brake;
 
 import br.com.michael_fausto.formulaSAE.entity.car.brake.BrakeSetupEntity;
+import br.com.michael_fausto.formulaSAE.entity.car.cooling.CoolingSetupEntity;
 import br.com.michael_fausto.formulaSAE.mapper.car.brake.BrakeSetupMapper;
 import br.com.michael_fausto.formulaSAE.model.car.brakes.dto.BrakeSetupDTO;
 import br.com.michael_fausto.formulaSAE.repository.car.brake.BrakeSetupRepository;
@@ -10,9 +11,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @AllArgsConstructor
+@Transactional
 public class BrakeSetupService {
 
     private final BrakeSetupRepository repository;
@@ -36,12 +39,6 @@ public class BrakeSetupService {
         return dto;
     }
 
-    public BrakeSetupEntity convertEntity(BrakeSetupDTO dto) {
-        BrakeSetupEntity entity = mapper.toEntity(dto);
-        logger.info("BrakeSetup ENTITY convert : {}", entity);
-        return entity;
-    }
-
     public BrakeSetupEntity getBrakeSetupEntity(Long id) {
         BrakeSetupEntity entity =  repository.findById(id).orElseThrow(()
                 -> new EntityNotFoundException("Brake Setup with" + id + " not found"));
@@ -49,7 +46,16 @@ public class BrakeSetupService {
         return entity;
     }
 
-    public BrakeSetupEntity updateBrakeSetupEntity(BrakeSetupDTO dto, Long id) {
+    @Transactional
+    public BrakeSetupEntity findById(Long id) {
+        BrakeSetupEntity entity =  repository.findById(id).orElseThrow(()
+                -> new EntityNotFoundException("Cooling Setup with" + id + " not found"));
+        logger.info("CoolingSetup find by id : {}", entity);
+        return entity;
+    }
+
+    @Transactional
+    public void updateBrakeSetupEntity(BrakeSetupDTO dto, Long id) {
         BrakeSetupEntity entity = getBrakeSetupEntity(id);
 
         entity.setProfileName(dto.profileName());
@@ -60,10 +66,9 @@ public class BrakeSetupService {
 
         repository.save(entity);
         logger.info("BrakeSetup update: {}", entity);
-
-        return entity;
     }
 
+    @Transactional
     public void deleteBrakeSetup(Long id) {
         try {
             repository.deleteById(id);

@@ -16,7 +16,7 @@ public class CoolingSetupController {
 
     @PostMapping("/create")
     public ResponseEntity<CoolingSetupDTO> createCoolingSetup(@RequestBody CoolingSetupDTO dto) {
-        CoolingSetupEntity entity = setupService.convertEntity(dto);
+        CoolingSetupEntity entity = setupService.buildCoolingSetup(dto);
         setupService.saveEntity(entity);
         return ResponseEntity.ok(dto);
     }

@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Entity
-@Table (name = "brake_telemetry")
+@Table(name = "brake_telemetry")
 @AllArgsConstructor
 @NoArgsConstructor
 public class BrakeEntity {

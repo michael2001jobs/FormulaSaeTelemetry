@@ -1,5 +1,6 @@
 package br.com.michael_fausto.formulaSAE.entity;
 
+import br.com.michael_fausto.formulaSAE.entity.car.CarEntity;
 import br.com.michael_fausto.formulaSAE.entity.car.brake.BrakeEntity;
 import br.com.michael_fausto.formulaSAE.entity.car.cooling.CoolingEntity;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -27,6 +28,10 @@ public class TelemetryEntity {
     @ManyToOne
     @JsonIgnore
     private PilotEntity pilot;
+
+    @OneToOne
+    @JoinColumn(name = "car_id")
+    private CarEntity car;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime timestamp;

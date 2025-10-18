@@ -40,7 +40,7 @@ public class PilotService {
     @Transactional
     public PilotEntity findById(Long id) {
         PilotEntity entity = repository.findById(id).orElseThrow(()
-                -> new EntityNotFoundException("Cooling Setup with" + id + " not found"));
+                -> new EntityNotFoundException("Pilot Setup with " + id + " not found"));
         logger.debug("Pilot find by id : {}", entity);
         return entity;
     }

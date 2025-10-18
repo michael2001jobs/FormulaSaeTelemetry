@@ -2,6 +2,7 @@ package br.com.michael_fausto.formulaSAE.service;
 
 import br.com.michael_fausto.formulaSAE.entity.PilotEntity;
 import br.com.michael_fausto.formulaSAE.entity.TelemetryEntity;
+import br.com.michael_fausto.formulaSAE.entity.car.CarEntity;
 import br.com.michael_fausto.formulaSAE.entity.car.brake.BrakeEntity;
 import br.com.michael_fausto.formulaSAE.entity.car.brake.BrakeSetupEntity;
 import br.com.michael_fausto.formulaSAE.entity.car.cooling.CoolingEntity;
@@ -25,12 +26,12 @@ public class TelemetryService {
     private final TelemetryRepository repository;
     private final TelemetryMapper mapper;
     private final PilotService pilotService;
-    private final BrakeService brakeService;
 
-    public TelemetryEntity buildTelemetryList(PilotEntity pilot) {
+    public TelemetryEntity buildTelemetryList(PilotEntity pilot, CarEntity car) {
         return new TelemetryEntity(
                 null,
                 pilot,
+                car,
                 LocalDateTime.now(),
                 new ArrayList<BrakeEntity>(),
                 new ArrayList<CoolingEntity>()
@@ -51,8 +52,4 @@ public class TelemetryService {
                 .orElseThrow(() -> new EntityNotFoundException("Error, invalid Telemetry"));
     }
 
-    public BrakeDTO brakeMqttReading(TelemetryEntity entity, BrakeSetupEntity setup) {
-        entity.getBrakeTelemetry().add(brakeService.mqttBrakeReady(setup));
-        return brakeService.getLatestTelemetry();
-    }
 }
