@@ -43,4 +43,18 @@ public class BrakeEntity {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime timestamp;
 
+    public BrakeEntity(String wheelPosition,
+                       Integer discTemperature,
+                       ComponentStatus discTemperatureStatus,
+                       Integer fluidPressure,
+                       ComponentStatus fluidPressureStatus)
+                        {
+        this.id = null;
+        this.wheelPosition = wheelPosition;
+        this.discTemperature = discTemperature;
+        this.discTemperatureStatus = discTemperatureStatus;
+        this.fluidPressure = fluidPressure;
+        this.fluidPressureStatus = fluidPressureStatus;
+        this.timestamp = LocalDateTime.now();
+    }
 }

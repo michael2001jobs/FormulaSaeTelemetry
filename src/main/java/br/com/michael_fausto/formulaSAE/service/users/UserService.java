@@ -1,9 +1,9 @@
-package br.com.michael_fausto.formulaSAE.service;
+package br.com.michael_fausto.formulaSAE.service.users;
 
-import br.com.michael_fausto.formulaSAE.entity.PilotEntity;
-import br.com.michael_fausto.formulaSAE.mapper.PilotMapper;
-import br.com.michael_fausto.formulaSAE.model.pilot.PilotDTO;
-import br.com.michael_fausto.formulaSAE.repository.PilotRepository;
+import br.com.michael_fausto.formulaSAE.entity.users.UsersEntity;
+import br.com.michael_fausto.formulaSAE.mapper.users.UsersMapper;
+import br.com.michael_fausto.formulaSAE.model.users.UsersDTO;
+import br.com.michael_fausto.formulaSAE.repository.users.UsersRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
@@ -14,40 +14,40 @@ import org.springframework.transaction.annotation.Transactional;
 
 @AllArgsConstructor
 @Service
-public class PilotService {
+public class UserService {
 
-    private final PilotRepository repository;
-    private final PilotMapper mapper;
-    private final Logger logger = LoggerFactory.getLogger(PilotService.class);
+    private final UsersRepository repository;
+    private final UsersMapper mapper;
+    private final Logger logger = LoggerFactory.getLogger(UserService.class);
 
-    public PilotDTO convertDto(PilotEntity entity) {
-        PilotDTO dto = mapper.toDto(entity);
+    public UsersDTO convertDto(UsersEntity entity) {
+        UsersDTO dto = mapper.toDto(entity);
         logger.info("Pilot convert in DTO: {}", dto);
         return dto;
     }
 
-    public void savePilot(PilotEntity entity) {
+    public void savePilot(UsersEntity entity) {
         repository.save(entity);
         logger.info("Pilot saved: {}", entity);
     }
 
-    public PilotEntity convertEntity(PilotDTO dto) {
-        PilotEntity entity = mapper.toEntity(dto);
+    public UsersEntity convertEntity(UsersDTO dto) {
+        UsersEntity entity = mapper.toEntity(dto);
         logger.info("Pilot convert in Entity : {}", entity);
         return entity;
     }
 
     @Transactional
-    public PilotEntity findById(Long id) {
-        PilotEntity entity = repository.findById(id).orElseThrow(()
+    public UsersEntity findById(Long id) {
+        UsersEntity entity = repository.findById(id).orElseThrow(()
                 -> new EntityNotFoundException("Pilot Setup with " + id + " not found"));
         logger.debug("Pilot find by id : {}", entity);
         return entity;
     }
 
     @Transactional
-    public PilotDTO updatePilot(PilotDTO dto, Long id) {
-        PilotEntity entity = findById(id);
+    public UsersDTO updatePilot(UsersDTO dto, Long id) {
+        UsersEntity entity = findById(id);
 
         entity.setEmail(dto.getEmail());
         entity.setName(dto.getName());
@@ -57,7 +57,6 @@ public class PilotService {
 
         return mapper.toDto(entity);
     }
-
 
     @Transactional
     public void deletePilot(Long id) {

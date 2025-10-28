@@ -1,4 +1,4 @@
-package br.com.michael_fausto.formulaSAE.controller.car;
+package br.com.michael_fausto.formulaSAE.controller.car.cooling;
 
 import br.com.michael_fausto.formulaSAE.entity.car.cooling.CoolingSetupEntity;
 import br.com.michael_fausto.formulaSAE.model.car.cooling.dto.CoolingSetupDTO;

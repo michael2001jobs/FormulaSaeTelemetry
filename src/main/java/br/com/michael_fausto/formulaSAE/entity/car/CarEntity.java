@@ -17,16 +17,25 @@ public class CarEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    private Long id;
 
-    String name;
+    private String name;
+
+    private String versionOrModel;
 
     @OneToOne
     @JoinColumn(name = "brake_setup_id")
-    BrakeSetupEntity brakeSetup;
+    private BrakeSetupEntity brakeSetup;
 
     @OneToOne
     @JoinColumn(name = "cooling_setup_id")
-    CoolingSetupEntity coolingSetup;
+    private CoolingSetupEntity coolingSetup;
 
+    public CarEntity(String name, String versionOrModel) {
+        this.id = null;
+        this.name = name;
+        this.versionOrModel = versionOrModel;
+        this.brakeSetup = null;
+        this.coolingSetup = null;
+    }
 }

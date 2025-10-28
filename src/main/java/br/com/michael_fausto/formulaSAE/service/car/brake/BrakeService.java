@@ -47,13 +47,11 @@ public class BrakeService {
     public BrakeEntity buildBrakeEntity(BrakeData brakeData, BrakeSetupEntity setup) {
         if (!setupService.isTableEmpty()) {
             return new BrakeEntity(
-                    null,
                     brakeData.wheelPosition(),
                     brakeData.discTemperature(),
                     setDiscTemperatureStatus(brakeData, setup),
                     brakeData.fluidPressure(),
-                    setFluidPressureStatus(brakeData, setup),
-                    LocalDateTime.now());
+                    setFluidPressureStatus(brakeData, setup));
         }
         else {
             throw new EntityNotFoundException("No CoolingSetup in database");

@@ -37,4 +37,18 @@ public class BrakeSetupEntity {
 
     @Column(name = "high_fluid_press", nullable = false)
     private Integer highFluidPressure;
+
+    public BrakeSetupEntity(Long id,
+                            String profileName,
+                            Integer normalDiscTemperature,
+                            Integer highDiscTemperature,
+                            Integer normalFluidPressure,
+                            Integer highFluidPressure) {
+        this.id = null;
+        this.profileName = profileName;
+        this.normalDiscTemperature = normalDiscTemperature;
+        this.highDiscTemperature = highDiscTemperature;
+        this.normalFluidPressure = normalFluidPressure;
+        this.highFluidPressure = highFluidPressure;
+    }
 }

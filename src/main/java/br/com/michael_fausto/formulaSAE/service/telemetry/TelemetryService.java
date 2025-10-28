@@ -1,16 +1,14 @@
-package br.com.michael_fausto.formulaSAE.service;
+package br.com.michael_fausto.formulaSAE.service.telemetry;
 
-import br.com.michael_fausto.formulaSAE.entity.PilotEntity;
-import br.com.michael_fausto.formulaSAE.entity.TelemetryEntity;
+import br.com.michael_fausto.formulaSAE.entity.users.UsersEntity;
+import br.com.michael_fausto.formulaSAE.entity.telemetry.TelemetryEntity;
 import br.com.michael_fausto.formulaSAE.entity.car.CarEntity;
 import br.com.michael_fausto.formulaSAE.entity.car.brake.BrakeEntity;
-import br.com.michael_fausto.formulaSAE.entity.car.brake.BrakeSetupEntity;
 import br.com.michael_fausto.formulaSAE.entity.car.cooling.CoolingEntity;
-import br.com.michael_fausto.formulaSAE.mapper.TelemetryMapper;
-import br.com.michael_fausto.formulaSAE.model.car.brakes.dto.BrakeDTO;
+import br.com.michael_fausto.formulaSAE.mapper.telemetry.TelemetryMapper;
 import br.com.michael_fausto.formulaSAE.model.telemetry.TelemetryDTO;
-import br.com.michael_fausto.formulaSAE.repository.TelemetryRepository;
-import br.com.michael_fausto.formulaSAE.service.car.brake.BrakeService;
+import br.com.michael_fausto.formulaSAE.repository.telemetry.TelemetryRepository;
+import br.com.michael_fausto.formulaSAE.service.users.UserService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,18 +23,9 @@ public class TelemetryService {
 
     private final TelemetryRepository repository;
     private final TelemetryMapper mapper;
-    private final PilotService pilotService;
+    private final UserService userService;
 
-    public TelemetryEntity buildTelemetryList(PilotEntity pilot, CarEntity car) {
-        return new TelemetryEntity(
-                null,
-                pilot,
-                car,
-                LocalDateTime.now(),
-                new ArrayList<BrakeEntity>(),
-                new ArrayList<CoolingEntity>()
-        );
-    }
+    public TelemetryEntity buildTelemetryList(UsersEntity user, CarEntity car) {return new TelemetryEntity(user, car);}
 
     public void saveList(TelemetryEntity entity) {
         repository.save(entity);

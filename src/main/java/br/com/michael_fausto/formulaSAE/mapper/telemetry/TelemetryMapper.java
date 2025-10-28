@@ -1,6 +1,6 @@
-package br.com.michael_fausto.formulaSAE.mapper;
+package br.com.michael_fausto.formulaSAE.mapper.telemetry;
 
-import br.com.michael_fausto.formulaSAE.entity.TelemetryEntity;
+import br.com.michael_fausto.formulaSAE.entity.telemetry.TelemetryEntity;
 import br.com.michael_fausto.formulaSAE.mapper.car.brake.BrakeMapper;
 import br.com.michael_fausto.formulaSAE.mapper.car.cooling.CoolingMapper;
 import br.com.michael_fausto.formulaSAE.model.telemetry.TelemetryDTO;

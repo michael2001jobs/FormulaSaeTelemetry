@@ -26,11 +26,11 @@ public class CarService {
     private final CoolingSetupService coolingSetupService;
 
     public CarEntity buildCar(CarDTO dto) {
-        return new CarEntity(
-                null,
-                dto.name(),
-                null,
-                null);
+        return new CarEntity(dto.name(), dto.versionOrModel());
+    }
+
+    public CarDTO convertDTO(CarEntity entity) {
+        return mapper.toDto(entity);
     }
 
     public void carIsCompleted(CarEntity entity) {
@@ -54,5 +54,9 @@ public class CarService {
         CarEntity entity = repository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Cooling Setup with" + id + " not found"));
         return entity;
+    }
+
+    public CarEntity findByName(String name) {
+        return repository.findByName(name);
     }
 }

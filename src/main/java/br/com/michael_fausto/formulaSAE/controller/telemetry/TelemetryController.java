@@ -1,8 +1,8 @@
-package br.com.michael_fausto.formulaSAE.controller;
+package br.com.michael_fausto.formulaSAE.controller.telemetry;
 
 import br.com.michael_fausto.formulaSAE.model.telemetry.TelemetryDTO;
-import br.com.michael_fausto.formulaSAE.service.PilotService;
-import br.com.michael_fausto.formulaSAE.service.TelemetryService;
+import br.com.michael_fausto.formulaSAE.service.users.UserService;
+import br.com.michael_fausto.formulaSAE.service.telemetry.TelemetryService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 public class TelemetryController {
 
     private final TelemetryService telemetryService;
-    private final PilotService pilotService;
+    private final UserService userService;
 
 //    @PostMapping("/telemetry/{pilotId}")
 //    public ResponseEntity<?> createTelemetry(@PathVariable Long pilotId) {

@@ -1,6 +1,6 @@
-package br.com.michael_fausto.formulaSAE.repository;
+package br.com.michael_fausto.formulaSAE.repository.telemetry;
 
-import br.com.michael_fausto.formulaSAE.entity.TelemetryEntity;
+import br.com.michael_fausto.formulaSAE.entity.telemetry.TelemetryEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
