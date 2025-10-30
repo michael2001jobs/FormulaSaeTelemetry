@@ -9,5 +9,5 @@ import java.util.List;
 @Repository
 public interface TelemetryRepository extends JpaRepository<TelemetryEntity, Long> {
 
-    List<TelemetryEntity> findByPilotId(Long pilot_id);
+//    List<TelemetryEntity> findByPilotId(Long pilot_id);
 }

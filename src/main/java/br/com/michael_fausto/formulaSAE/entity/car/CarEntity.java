@@ -1,12 +1,13 @@
 package br.com.michael_fausto.formulaSAE.entity.car;
 
-import br.com.michael_fausto.formulaSAE.entity.car.brake.BrakeSetupEntity;
-import br.com.michael_fausto.formulaSAE.entity.car.cooling.CoolingSetupEntity;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.time.LocalDateTime;
 
 @Entity
 @AllArgsConstructor
@@ -16,26 +17,28 @@ import lombok.Setter;
 public class CarEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
+    @Column(nullable = false)
     private String name;
 
+    @Column(nullable = false)
     private String versionOrModel;
 
-    @OneToOne
-    @JoinColumn(name = "brake_setup_id")
-    private BrakeSetupEntity brakeSetup;
+    @Column(name = "create_in", nullable = false)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime createIn;
 
-    @OneToOne
-    @JoinColumn(name = "cooling_setup_id")
-    private CoolingSetupEntity coolingSetup;
+    @OneToOne(fetch = FetchType.EAGER)
+    private SetupCarEntity subSystemSetup;
 
-    public CarEntity(String name, String versionOrModel) {
-        this.id = null;
+    public CarEntity(String name, String versionOrModel, LocalDateTime createIn, SetupCarEntity subSystemSetup) {
         this.name = name;
         this.versionOrModel = versionOrModel;
-        this.brakeSetup = null;
-        this.coolingSetup = null;
+        this.createIn = LocalDateTime.now();
+        this.subSystemSetup = subSystemSetup;
     }
 }
+
+

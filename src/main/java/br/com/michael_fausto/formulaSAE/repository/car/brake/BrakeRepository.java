@@ -7,5 +7,4 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface BrakeRepository extends JpaRepository<BrakeEntity, Long> {
 
-    BrakeEntity findTopByOrderByIdDesc();
 }

@@ -14,12 +14,14 @@ import java.time.LocalDateTime;
 public class BrakeSetupEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
-    @Column(name = "sub_system_name", nullable = false)
-    private String profileName;
+    @Column(name = "system_name", nullable = false)
+    private String name;
 
+    @Column(nullable = false)
+    private LocalDateTime createAt;
 
 
 
@@ -31,24 +33,10 @@ public class BrakeSetupEntity {
 
 
 
-
     @Column(name = "normal_fluid_press", nullable = false)
     private Integer normalFluidPressure;
 
     @Column(name = "high_fluid_press", nullable = false)
     private Integer highFluidPressure;
 
-    public BrakeSetupEntity(Long id,
-                            String profileName,
-                            Integer normalDiscTemperature,
-                            Integer highDiscTemperature,
-                            Integer normalFluidPressure,
-                            Integer highFluidPressure) {
-        this.id = null;
-        this.profileName = profileName;
-        this.normalDiscTemperature = normalDiscTemperature;
-        this.highDiscTemperature = highDiscTemperature;
-        this.normalFluidPressure = normalFluidPressure;
-        this.highFluidPressure = highFluidPressure;
-    }
 }

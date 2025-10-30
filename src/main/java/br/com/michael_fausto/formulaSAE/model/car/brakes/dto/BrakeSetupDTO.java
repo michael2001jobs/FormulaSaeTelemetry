@@ -5,11 +5,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.time.LocalDateTime;
 
 public record BrakeSetupDTO(
-        @JsonIgnore
-        Long id,
-        String setup,
-        String profileName,
 
+        String name,
+        LocalDateTime createAt,
 
         Integer normalDiscTemperature,
         Integer highDiscTemperature,

@@ -39,9 +39,9 @@ public class BrakeEntity {
     @Enumerated(EnumType.STRING)
     private ComponentStatus fluidPressureStatus;
 
-    @Column(name = "timestamp", nullable = false)
+    @Column(name = "created_in", nullable = false)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime timestamp;
+    private LocalDateTime createdIn;
 
     public BrakeEntity(String wheelPosition,
                        Integer discTemperature,
@@ -55,6 +55,6 @@ public class BrakeEntity {
         this.discTemperatureStatus = discTemperatureStatus;
         this.fluidPressure = fluidPressure;
         this.fluidPressureStatus = fluidPressureStatus;
-        this.timestamp = LocalDateTime.now();
+        this.createdIn = LocalDateTime.now();
     }
 }

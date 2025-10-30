@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -15,11 +17,15 @@ import lombok.Setter;
 public class CoolingSetupEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     Long id;
 
     @Column(name = "profile_name", nullable = false)
-    String profileName;
+    private String name;
+
+    @Column(nullable = false)
+    private LocalDateTime createAt;
+
 
 
     @Column(name = "normal_cooling_temp", nullable = false)
@@ -27,6 +33,7 @@ public class CoolingSetupEntity {
 
     @Column(name = "high_cooling_temp", nullable = false)
     private Integer highCoolingTemperature;
+
 
 
     @Column(name = "low_reservoir_volume", nullable = false)

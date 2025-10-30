@@ -7,7 +7,6 @@ import br.com.michael_fausto.formulaSAE.mapper.car.cooling.CoolingMapper;
 import br.com.michael_fausto.formulaSAE.model.car.ComponentStatus;
 import br.com.michael_fausto.formulaSAE.model.car.cooling.CoolingData;
 import br.com.michael_fausto.formulaSAE.model.car.cooling.CoolingSensorData;
-import br.com.michael_fausto.formulaSAE.model.car.cooling.dto.CoolingDTO;
 import br.com.michael_fausto.formulaSAE.mqtt.car.cooling.CoolingMqttSubscriber;
 import br.com.michael_fausto.formulaSAE.repository.car.cooling.CoolingRepository;
 import br.com.michael_fausto.formulaSAE.util.ConvertUtills;
@@ -31,30 +30,27 @@ public class CoolingService {
     private final CoolingSetupService setupService;
     private final Logger logger = LoggerFactory.getLogger(CoolingService.class);
 
-    public CoolingEntity buildCoolingEntity(CoolingData coolingData, CoolingSetupEntity setup) {
-        if (!setupService.isTableEmpty()) {
-            return new CoolingEntity(
-                    null,
-                    coolingData.coolingSystemTemperature(),
-                    setCoolingTemperatureStatus(coolingData, setup),
-                    coolingData.reservoirVolume(),
-                    setCoolingReservoirVolumeStatus(coolingData, setup),
-                    LocalDateTime.now(),
-                    coolingData.fan());
-        }
-        else {
-            throw new EntityNotFoundException("No CoolingSetup in database");
-        }
-    }
+//    public CoolingEntity buildCoolingEntity(CoolingData coolingData, CoolingSetupEntity setup) {
+//        if (!setupService.isTableEmpty()) {
+//            return new CoolingEntity(
+//                    null,
+//                    coolingData.coolingSystemTemperature(),
+//                    setCoolingTemperatureStatus(coolingData, setup),
+//                    coolingData.reservoirVolume(),
+//                    setCoolingReservoirVolumeStatus(coolingData, setup),
+//                    LocalDateTime.now(),
+//                    coolingData.fan());
+//        }
+//        else {
+//            throw new EntityNotFoundException("No CoolingSetup in database");
+//        }
+//    }
 
-    public CoolingDTO getLatestTelemetry() {
-        return mapper.toDto(repository.findTopByOrderByIdDesc());
-    }
-
-    @Transactional
-    public CoolingEntity mqttCooling(CoolingSetupEntity setup) {
-        return buildCoolingEntity(coolingSensorParse(subscriber.getLast()), setup);
-    }
+//    @Transactional
+//    public void mqttCooling(CoolingSetupEntity setup) {
+//        CoolingEntity cooling = buildCoolingEntity(coolingSensorParse(subscriber.getLast()), setup);
+//        repository.save(cooling);
+//    }
 
     public CoolingData coolingSensorParse(CoolingSensorData sensorData) {
         if (sensorData == null) throw new SensorFailureException("CoolingSensorOFF");

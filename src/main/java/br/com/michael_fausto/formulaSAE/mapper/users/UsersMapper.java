@@ -9,7 +9,6 @@ public interface UsersMapper {
 
     UsersEntity toEntity(UsersDTO usersDTO);
 
-
     UsersDTO toDto(UsersEntity pilot);
 
 }

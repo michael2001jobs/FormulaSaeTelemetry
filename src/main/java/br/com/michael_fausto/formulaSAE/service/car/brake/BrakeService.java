@@ -1,13 +1,12 @@
 package br.com.michael_fausto.formulaSAE.service.car.brake;
 
+import br.com.michael_fausto.formulaSAE.entity.car.brake.BrakeEntity;
 import br.com.michael_fausto.formulaSAE.entity.car.brake.BrakeSetupEntity;
 import br.com.michael_fausto.formulaSAE.exception.SensorFailureException;
 import br.com.michael_fausto.formulaSAE.mapper.car.brake.BrakeMapper;
 import br.com.michael_fausto.formulaSAE.model.car.brakes.BrakeData;
 import br.com.michael_fausto.formulaSAE.model.car.brakes.BrakeSensorData;
-import br.com.michael_fausto.formulaSAE.entity.car.brake.BrakeEntity;
 import br.com.michael_fausto.formulaSAE.model.car.ComponentStatus;
-import br.com.michael_fausto.formulaSAE.model.car.brakes.dto.BrakeDTO;
 import br.com.michael_fausto.formulaSAE.mqtt.car.brake.back.left.BrakeMqttSubscriberBL;
 import br.com.michael_fausto.formulaSAE.mqtt.car.brake.back.right.BrakeMqttSubscriberBR;
 import br.com.michael_fausto.formulaSAE.mqtt.car.brake.front.left.BrakeMqttSubscriberFL;
@@ -18,16 +17,11 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Service
@@ -44,7 +38,7 @@ public class BrakeService {
     private final BrakeSetupService setupService;
     private final Logger logger = LoggerFactory.getLogger(BrakeService.class);
 
-    public BrakeEntity buildBrakeEntity(BrakeData brakeData, BrakeSetupEntity setup) {
+    private BrakeEntity buildBrakeEntity(BrakeData brakeData, BrakeSetupEntity setup) {
         if (!setupService.isTableEmpty()) {
             return new BrakeEntity(
                     brakeData.wheelPosition(),

@@ -18,9 +18,6 @@ import java.util.List;
 @Setter
 public class UsersDTO {
 
-    @JsonIgnore
-    Long id;
-
     @NotBlank(message = "Name is required")
     private String name;
 
@@ -29,5 +26,6 @@ public class UsersDTO {
     @Pattern(regexp = "^[A-Za-z0-9._%+-]+@pucpr\\.com$", message = "Incorrect email or with the wrong extension, should be @pucpr.com")
     private String email;
 
-   private List<TelemetrySummaryDTO> telemetryList;
+    private List<TelemetrySummaryDTO> telemetryList;
+
 }

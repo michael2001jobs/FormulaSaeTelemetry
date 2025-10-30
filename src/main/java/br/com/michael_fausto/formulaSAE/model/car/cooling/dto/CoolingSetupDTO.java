@@ -1,11 +1,11 @@
 package br.com.michael_fausto.formulaSAE.model.car.cooling.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.time.LocalDateTime;
 
 public record CoolingSetupDTO (
-    Long id,
 
-    String profileName,
+    String name,
+    LocalDateTime createAt,
 
     Integer normalCoolingTemperature,
     Integer highCoolingTemperature,

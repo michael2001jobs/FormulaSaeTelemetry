@@ -8,7 +8,4 @@ public record CarDTO(
         @JsonIgnore
         Long id,
         String name,
-        String versionOrModel,
-        BrakeSetupDTO brakeSetup,
-        CoolingSetupDTO coolingSetup
-) {}
+        String versionOrModel) {}

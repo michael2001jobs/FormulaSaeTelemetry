@@ -3,6 +3,7 @@ package br.com.michael_fausto.formulaSAE.service.users;
 import br.com.michael_fausto.formulaSAE.entity.users.UsersEntity;
 import br.com.michael_fausto.formulaSAE.mapper.users.UsersMapper;
 import br.com.michael_fausto.formulaSAE.model.users.UsersDTO;
+import br.com.michael_fausto.formulaSAE.model.auth.UsersRegisterDTO;
 import br.com.michael_fausto.formulaSAE.repository.users.UsersRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
@@ -26,28 +27,19 @@ public class UserService {
         return dto;
     }
 
-    public void savePilot(UsersEntity entity) {
-        repository.save(entity);
-        logger.info("Pilot saved: {}", entity);
-    }
-
-    public UsersEntity convertEntity(UsersDTO dto) {
-        UsersEntity entity = mapper.toEntity(dto);
-        logger.info("Pilot convert in Entity : {}", entity);
-        return entity;
-    }
-
     @Transactional
-    public UsersEntity findById(Long id) {
-        UsersEntity entity = repository.findById(id).orElseThrow(()
-                -> new EntityNotFoundException("Pilot Setup with " + id + " not found"));
+    public UsersDTO findByEmail(String email) {
+
+        UsersEntity entity = repository.findByEmail(email);
+        UsersDTO dto = convertDto(entity);
+
         logger.debug("Pilot find by id : {}", entity);
-        return entity;
+        return dto;
     }
 
     @Transactional
-    public UsersDTO updatePilot(UsersDTO dto, Long id) {
-        UsersEntity entity = findById(id);
+    public UsersDTO updatePilot(UsersRegisterDTO dto, String email) {
+        UsersEntity entity = repository.findByEmail(email);
 
         entity.setEmail(dto.getEmail());
         entity.setName(dto.getName());
@@ -59,12 +51,13 @@ public class UserService {
     }
 
     @Transactional
-    public void deletePilot(Long id) {
+    public UsersDTO deletePilot(String email) {
         try {
-            repository.deleteById(id);
+            repository.deleteByEmail(email);
             logger.info("Pilot as been deleted");
+            return findByEmail(email);
         } catch (EmptyResultDataAccessException e) {
-            throw new EntityNotFoundException("Pilot with" + id + " not found");
+            throw new EntityNotFoundException("Pilot with" + email + " not found");
         }
     }
 }

@@ -1,19 +1,22 @@
 package br.com.michael_fausto.formulaSAE.service.car;
 
 import br.com.michael_fausto.formulaSAE.entity.car.CarEntity;
-import br.com.michael_fausto.formulaSAE.exception.CarException;
+import br.com.michael_fausto.formulaSAE.entity.car.SetupCarEntity;
+import br.com.michael_fausto.formulaSAE.entity.car.brake.BrakeSetupEntity;
 import br.com.michael_fausto.formulaSAE.mapper.car.CarMapper;
 import br.com.michael_fausto.formulaSAE.model.car.CarDTO;
-import br.com.michael_fausto.formulaSAE.model.car.brakes.dto.BrakeSetupDTO;
-import br.com.michael_fausto.formulaSAE.model.car.cooling.dto.CoolingSetupDTO;
 import br.com.michael_fausto.formulaSAE.repository.car.CarRepository;
-import br.com.michael_fausto.formulaSAE.service.car.brake.BrakeSetupService;
-import br.com.michael_fausto.formulaSAE.service.car.cooling.CoolingSetupService;
+import br.com.michael_fausto.formulaSAE.service.interfaces.SetupCarInterface;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.smartcardio.CardException;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -21,42 +24,54 @@ public class CarService {
 
     private final CarRepository repository;
     private final CarMapper mapper;
+    private final Logger logger = LoggerFactory.getLogger(CarService.class);
 
-    private final BrakeSetupService brakeSetupService;
-    private final CoolingSetupService coolingSetupService;
+    public CarDTO create(CarDTO dto, SetupCarEntity setupCar) {
+        CarEntity entity = new CarEntity(
+                dto.name(),
+                dto.versionOrModel(),
+                LocalDateTime.now(),
+                setupCar);
 
-    public CarEntity buildCar(CarDTO dto) {
-        return new CarEntity(dto.name(), dto.versionOrModel());
+        repository.save(entity);
+        logger.debug("Car create");
+
+        return dto;
     }
 
-    public CarDTO convertDTO(CarEntity entity) {
-        return mapper.toDto(entity);
+    @Transactional
+    public CarDTO delete(String name) {
+        try {
+            repository.deleteByName(name);
+            logger.info(("Car as been delete"));
+
+            return mapper.toDto(repository.findByName(name));
+        } catch (EmptyResultDataAccessException e) {
+            throw  new EntityNotFoundException("Car not found");
+        }
     }
 
-    public void carIsCompleted(CarEntity entity) {
-        if (entity.getBrakeSetup() == null || entity.getCoolingSetup() == null)
-            throw new CarException("This car is not configured");
+    @Transactional
+    public CarDTO update(CarDTO dto, String name) {
+        CarEntity entity = repository.findByName(name);
+
+        entity.setName(dto.name());
+        entity.setVersionOrModel(dto.versionOrModel());
+
+        repository.save(entity);
+
+        return dto;
     }
 
-    public void setCollingSetup(CarEntity car, CoolingSetupDTO setup) {
-        car.setCoolingSetup(coolingSetupService.buildCoolingSetup(setup));
+    public CarDTO findByName(String name) {
+        return mapper.toDto(repository.findByName(name));
     }
 
-    public void setBrakeSetup(CarEntity car, BrakeSetupDTO setup) {
-        car.setBrakeSetup(brakeSetupService.buildBrakeSetup(setup));
+    public Boolean isEmpty() {
+        return repository.existsBy();
     }
 
-    public void saveEntity(CarEntity car) {
-        repository.save(car);
-    }
-
-    public CarEntity findById(Long id) {
-        CarEntity entity = repository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Cooling Setup with" + id + " not found"));
-        return entity;
-    }
-
-    public CarEntity findByName(String name) {
-        return repository.findByName(name);
+    public List<CarDTO> showAll() {
+        return mapper.listDto(repository.findAll());
     }
 }

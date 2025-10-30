@@ -1,8 +1,6 @@
 package br.com.michael_fausto.formulaSAE.entity.telemetry;
 
 import br.com.michael_fausto.formulaSAE.entity.car.CarEntity;
-import br.com.michael_fausto.formulaSAE.entity.car.brake.BrakeEntity;
-import br.com.michael_fausto.formulaSAE.entity.car.cooling.CoolingEntity;
 import br.com.michael_fausto.formulaSAE.entity.users.UsersEntity;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
@@ -18,13 +16,17 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
+@Table(name = "telemetry")
 @AllArgsConstructor
 @NoArgsConstructor
 public class TelemetryEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
+
+    @Column(nullable = false, length = 100)
+    String name;
 
     @ManyToOne
     private UsersEntity user;
@@ -36,19 +38,10 @@ public class TelemetryEntity {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime timestamp;
 
-    @OneToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "telemetry_id")
-    private List<BrakeEntity> brakeTelemetry;
-
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "telemetry_id")
-    private List<CoolingEntity> coolingTelemetry;
-
-    public TelemetryEntity(UsersEntity user, CarEntity car) {
+    public TelemetryEntity(UsersEntity user, CarEntity car, String name) {
         this.user = user;
+        this.name = name;
         this.car = car;
         this.timestamp = LocalDateTime.now();
-        this.brakeTelemetry = new ArrayList<BrakeEntity>();
-        this.coolingTelemetry = new ArrayList<CoolingEntity>();
     }
 }

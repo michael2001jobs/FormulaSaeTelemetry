@@ -1,40 +1,38 @@
 package br.com.michael_fausto.formulaSAE.controller.users;
 
-import br.com.michael_fausto.formulaSAE.entity.users.UsersEntity;
 import br.com.michael_fausto.formulaSAE.model.users.UsersDTO;
+import br.com.michael_fausto.formulaSAE.model.auth.UsersRegisterDTO;
 import br.com.michael_fausto.formulaSAE.service.users.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping("/pilot")
+@RequestMapping("/user")
 public class UserController {
 
     private final UserService userService;
 
-
-    @GetMapping("/{id}")  //ok
-    public ResponseEntity<UsersDTO> getPilot(@PathVariable Long id) {
-        UsersEntity entity = userService.findById(id);
-        UsersDTO dto = userService.convertDto(entity);
-        return ResponseEntity.ok(dto);
+    @GetMapping("/view")  //ok
+    public ResponseEntity<UsersDTO> getPilot(@AuthenticationPrincipal UserDetails user) {
+        UsersDTO response = userService.findByEmail(user.getUsername());
+        return ResponseEntity.ok(response);
     }
 
-    @DeleteMapping("/{id}") //ok
-    public ResponseEntity<UsersDTO> deletePilot(@PathVariable Long id) {
-        UsersEntity entity = userService.findById(id);
-        UsersDTO dto = userService.convertDto(entity);
-        userService.deletePilot(id);
-        return ResponseEntity.ok(dto);
+    @DeleteMapping("/delete")
+    public ResponseEntity<UsersDTO> deletePilot(@AuthenticationPrincipal UserDetails user) {
+        UsersDTO response = userService.deletePilot(user.getUsername());
+        return ResponseEntity.ok(response);
     }
 
-    @PutMapping("/{id}") //ok
-    public ResponseEntity<UsersDTO> updatePilot(@PathVariable Long id, @Validated @RequestBody UsersDTO dto) {
-        UsersEntity entity = userService.findById(id);
-        userService.updatePilot(dto, id);
-        return ResponseEntity.ok(dto);
+    @PutMapping("/update") //ok
+    public ResponseEntity<UsersDTO> updatePilot(@AuthenticationPrincipal UserDetails user,
+                                                @Validated @RequestBody UsersRegisterDTO dto) {
+        UsersDTO updateUser = userService.updatePilot(dto, user.getUsername());
+        return ResponseEntity.ok(updateUser);
     }
 }
