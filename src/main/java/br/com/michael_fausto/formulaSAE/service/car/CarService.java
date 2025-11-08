@@ -2,11 +2,9 @@ package br.com.michael_fausto.formulaSAE.service.car;
 
 import br.com.michael_fausto.formulaSAE.entity.car.CarEntity;
 import br.com.michael_fausto.formulaSAE.entity.car.SetupCarEntity;
-import br.com.michael_fausto.formulaSAE.entity.car.brake.BrakeSetupEntity;
 import br.com.michael_fausto.formulaSAE.mapper.car.CarMapper;
 import br.com.michael_fausto.formulaSAE.model.car.CarDTO;
 import br.com.michael_fausto.formulaSAE.repository.car.CarRepository;
-import br.com.michael_fausto.formulaSAE.service.interfaces.SetupCarInterface;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
@@ -15,7 +13,6 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -26,11 +23,11 @@ public class CarService {
     private final CarMapper mapper;
     private final Logger logger = LoggerFactory.getLogger(CarService.class);
 
+
     public CarDTO create(CarDTO dto, SetupCarEntity setupCar) {
         CarEntity entity = new CarEntity(
                 dto.name(),
                 dto.versionOrModel(),
-                LocalDateTime.now(),
                 setupCar);
 
         repository.save(entity);

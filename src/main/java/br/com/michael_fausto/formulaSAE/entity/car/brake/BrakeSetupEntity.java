@@ -1,5 +1,6 @@
 package br.com.michael_fausto.formulaSAE.entity.car.brake;
 
+import br.com.michael_fausto.formulaSAE.model.car.brakes.dto.BrakeSetupDTO;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -39,4 +40,12 @@ public class BrakeSetupEntity {
     @Column(name = "high_fluid_press", nullable = false)
     private Integer highFluidPressure;
 
+    public BrakeSetupEntity(BrakeSetupDTO dto) {
+        this.name = dto.name();
+        this.createAt = LocalDateTime.now();
+        this.normalDiscTemperature = dto.normalDiscTemperature();
+        this.highDiscTemperature = dto.highDiscTemperature();
+        this.normalFluidPressure = dto.normalFluidPressure();
+        this.highFluidPressure = dto.highFluidPressure();
+    }
 }

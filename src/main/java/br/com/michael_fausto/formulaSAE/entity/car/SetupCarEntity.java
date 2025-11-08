@@ -19,10 +19,18 @@ public class SetupCarEntity {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
+    private String name;
+
     @OneToOne(fetch = FetchType.EAGER)
     private BrakeSetupEntity brakeSetup;
 
     @OneToOne(fetch = FetchType.EAGER)
     private CoolingSetupEntity coolingSetup;
 
+    public SetupCarEntity(String name) {
+        this.name = name;
+        this.id = null;
+        this.coolingSetup = null;
+        this.brakeSetup = null;
+    }
 }

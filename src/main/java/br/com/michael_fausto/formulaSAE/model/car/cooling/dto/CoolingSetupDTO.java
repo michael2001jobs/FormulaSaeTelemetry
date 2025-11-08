@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 public record CoolingSetupDTO (
 
     String name,
-    LocalDateTime createAt,
+    LocalDateTime createdIn,
 
     Integer normalCoolingTemperature,
     Integer highCoolingTemperature,

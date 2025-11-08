@@ -1,23 +1,19 @@
 package br.com.michael_fausto.formulaSAE.service.car.cooling;
 
-import br.com.michael_fausto.formulaSAE.entity.car.cooling.CoolingEntity;
 import br.com.michael_fausto.formulaSAE.entity.car.cooling.CoolingSetupEntity;
 import br.com.michael_fausto.formulaSAE.exception.SensorFailureException;
 import br.com.michael_fausto.formulaSAE.mapper.car.cooling.CoolingMapper;
-import br.com.michael_fausto.formulaSAE.model.car.ComponentStatus;
+import br.com.michael_fausto.formulaSAE.model.car.enums.ComponentStatus;
 import br.com.michael_fausto.formulaSAE.model.car.cooling.CoolingData;
 import br.com.michael_fausto.formulaSAE.model.car.cooling.CoolingSensorData;
 import br.com.michael_fausto.formulaSAE.mqtt.car.cooling.CoolingMqttSubscriber;
 import br.com.michael_fausto.formulaSAE.repository.car.cooling.CoolingRepository;
 import br.com.michael_fausto.formulaSAE.util.ConvertUtills;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.function.Function;
 
 @AllArgsConstructor

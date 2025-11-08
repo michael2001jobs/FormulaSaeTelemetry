@@ -4,7 +4,7 @@ import br.com.michael_fausto.formulaSAE.entity.car.brake.BrakeSetupEntity;
 import br.com.michael_fausto.formulaSAE.mapper.car.brake.BrakeSetupMapper;
 import br.com.michael_fausto.formulaSAE.model.car.brakes.dto.BrakeSetupDTO;
 import br.com.michael_fausto.formulaSAE.repository.car.brake.BrakeSetupRepository;
-import br.com.michael_fausto.formulaSAE.service.interfaces.SetupCarInterface;
+import br.com.michael_fausto.formulaSAE.service.interfaces.SetupCarServiceInterface;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
@@ -13,12 +13,11 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @AllArgsConstructor
 @Service
-public class BrakeSetupService implements SetupCarInterface<BrakeSetupDTO> {
+public class BrakeSetupService implements SetupCarServiceInterface<BrakeSetupDTO> {
 
     private final BrakeSetupRepository repository;
     private final BrakeSetupMapper mapper;
@@ -27,24 +26,25 @@ public class BrakeSetupService implements SetupCarInterface<BrakeSetupDTO> {
 
     @Override
     public BrakeSetupDTO create(BrakeSetupDTO dto) {
-        BrakeSetupEntity entity = mapper.toEntity(dto);
-        entity.setCreateAt(LocalDateTime.now());
+        BrakeSetupEntity entity = new BrakeSetupEntity(dto);
 
         repository.save(entity);
 
         logger.debug("BrakeSetup convert in build setup: {}", entity);
-        return dto;
+        return mapper.toDto(entity);
     }
 
     @Override
     @Transactional
-    public BrakeSetupDTO delete(String name) {
+    public BrakeSetupDTO deleteById(Long id) {
         try {
-            repository.deleteByName(name);
-            logger.info("Brake Setup as been deleted");
+            BrakeSetupEntity entity = mapper.toEntity(findById(id));
+            BrakeSetupDTO responseDTO = mapper.toDto(entity);
 
-            return mapper.toDto(repository.findByName(name));
+            repository.delete(entity);
+            logger.info("Brake Setup as been deleted --- method id" );
 
+            return responseDTO;
         } catch (EmptyResultDataAccessException e) {
             throw new EntityNotFoundException("Brake Setup not found");
         }
@@ -52,24 +52,24 @@ public class BrakeSetupService implements SetupCarInterface<BrakeSetupDTO> {
 
     @Override
     @Transactional
-    public BrakeSetupDTO update(BrakeSetupDTO dto, String name) {
-        BrakeSetupEntity entity = repository.findByName(name);
+    public BrakeSetupDTO updateName(String updateName, Long id) {
+        BrakeSetupEntity entity = repository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Brake Setup not found"));
 
-        entity.setName(dto.name());
-        entity.setNormalDiscTemperature(dto.normalDiscTemperature());
-        entity.setHighDiscTemperature(dto.highDiscTemperature());
-        entity.setNormalFluidPressure(dto.normalFluidPressure());
-        entity.setHighFluidPressure(dto.highFluidPressure());
+        entity.setName(updateName);
 
         repository.save(entity);
         logger.info("BrakeSetup update: {}", entity);
 
-        return dto;
+        return mapper.toDto(entity);
     }
 
     @Override
-    public BrakeSetupDTO findByName(String name) {
-        return mapper.toDto(repository.findByName(name));
+    public BrakeSetupDTO copyAndEdit(Long id) {
+        BrakeSetupDTO copy = create(findById(id));
+        logger.debug("Brake setup copied");
+
+        return copy;
     }
 
     @Override
@@ -79,6 +79,17 @@ public class BrakeSetupService implements SetupCarInterface<BrakeSetupDTO> {
 
     @Override
     public List<BrakeSetupDTO> showAll() {
-        return mapper.listDto(repository.findAll());
+        if (!isEmpty()){
+            return mapper.listDto(repository.findAll());
+        }
+        else {
+            throw new EntityNotFoundException("Brake setup not found");
+        }
+    }
+
+    @Override
+    public BrakeSetupDTO findById(Long id) {
+        return mapper.toDto(repository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Brake Setup not found")));
     }
 }

@@ -1,10 +1,10 @@
 package br.com.michael_fausto.formulaSAE.model.car.brakes.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import java.time.LocalDateTime;
 
 public record BrakeSetupDTO(
+
+        Long id,
 
         String name,
         LocalDateTime createAt,

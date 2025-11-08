@@ -1,6 +1,6 @@
 package br.com.michael_fausto.formulaSAE.entity.car.cooling;
 
-import br.com.michael_fausto.formulaSAE.model.car.ComponentStatus;
+import br.com.michael_fausto.formulaSAE.model.car.enums.ComponentStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

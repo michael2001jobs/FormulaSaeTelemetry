@@ -1,6 +1,6 @@
 package br.com.michael_fausto.formulaSAE.model.car.brakes.dto;
 
-import br.com.michael_fausto.formulaSAE.model.car.ComponentStatus;
+import br.com.michael_fausto.formulaSAE.model.car.enums.ComponentStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.time.LocalDateTime;

@@ -1,4 +1,4 @@
-package br.com.michael_fausto.formulaSAE.model.car;
+package br.com.michael_fausto.formulaSAE.model.car.enums;
 
 public enum ComponentStatus {
 

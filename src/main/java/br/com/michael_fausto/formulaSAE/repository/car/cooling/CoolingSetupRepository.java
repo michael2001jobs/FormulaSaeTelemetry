@@ -7,9 +7,9 @@ import java.time.LocalDateTime;
 
 public interface CoolingSetupRepository extends JpaRepository<CoolingSetupEntity, Long> {
 
-    boolean existsBy();
-
-    void deleteByName(String profileName);
+    boolean existByIdNoNull();
 
     CoolingSetupEntity findByName(String name);
+
+    Long id(Long id);
 }

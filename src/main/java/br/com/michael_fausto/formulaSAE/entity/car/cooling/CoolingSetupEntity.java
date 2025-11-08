@@ -1,5 +1,6 @@
 package br.com.michael_fausto.formulaSAE.entity.car.cooling;
 
+import br.com.michael_fausto.formulaSAE.model.car.cooling.dto.CoolingSetupDTO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -24,7 +25,7 @@ public class CoolingSetupEntity {
     private String name;
 
     @Column(nullable = false)
-    private LocalDateTime createAt;
+    private LocalDateTime createdIn;
 
 
 
@@ -42,5 +43,14 @@ public class CoolingSetupEntity {
     @Column(name = "normal_reservoir_volume", nullable = false)
     private Double normalReservoirVolume;
 
+
+    public CoolingSetupEntity(CoolingSetupDTO dto) {
+        this.name = dto.name();
+        this.createdIn = LocalDateTime.now();
+        this.normalCoolingTemperature = dto.normalCoolingTemperature();
+        this.highCoolingTemperature = dto.highCoolingTemperature();
+        this.lowReservoirVolume = dto.lowReservoirVolume();
+        this.normalReservoirVolume = dto.normalReservoirVolume();
+    }
 
 }

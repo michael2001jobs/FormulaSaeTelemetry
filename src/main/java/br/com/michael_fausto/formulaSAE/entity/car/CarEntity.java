@@ -33,7 +33,7 @@ public class CarEntity {
     @OneToOne(fetch = FetchType.EAGER)
     private SetupCarEntity subSystemSetup;
 
-    public CarEntity(String name, String versionOrModel, LocalDateTime createIn, SetupCarEntity subSystemSetup) {
+    public CarEntity(String name, String versionOrModel, SetupCarEntity subSystemSetup) {
         this.name = name;
         this.versionOrModel = versionOrModel;
         this.createIn = LocalDateTime.now();
